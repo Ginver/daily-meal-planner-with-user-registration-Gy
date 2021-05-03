@@ -11,8 +11,8 @@ function Profile() {
         <>
             <h1>Profielpagina</h1>
             <h2>Gegevens</h2>
-            <p><strong>Gebruikersnaam:</strong> {user && user.username}</p>
-            <p><strong>Email:</strong> {user && user.email}</p>
+            <p><strong>Gebruikersnaam:</strong></p>
+            <p><strong>Email:</strong></p>
             <h2>Afgeschermde content voor ingelogde gebruikers</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab alias cum debitis dolor dolore fuga id molestias qui quo unde?</p>
             <p>Terug naar de <Link to="/">Homepagina</Link></p>
