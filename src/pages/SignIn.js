@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from "axios";
+import { UserContext } from "../context/UserContext";
+
 
 // 1. install axios
 // 2. import axios
@@ -14,12 +16,16 @@ import axios from "axios";
 // 8. gebruiker doorsturen naar profiel pagina
 // 9. de gebruikersdata moet in de context worden geplaatsd zodat alle componeneten erbij kunnen
 
+// 10. import useContext en UserContext
+// 11. destructure daar de login functie
 
 function SignIn() {
+    const { loginFunc } = useContext(UserContext);
+
     const [error, setError] = useState(false);
     const [loading, toggleLoading] = useState(false);
 
-    const  history = useHistory();
+    // const  history = useHistory(); // niet meer nodig, kan weg nadat we het in de context component hebben geplaatsd
     const { handleSubmit, register } = useForm();
 
     async function onSubmit(data) {
@@ -29,10 +35,9 @@ function SignIn() {
 
         try {
             const result = await axios.post('http://localhost:3000/signin', data);
-            console.log(result.data.accessToken);
+            // console.log(result.data.accessToken);
 
-            localStorage.setItem('banaan', result.data.accessToken);
-            history.push('/Profile');
+            loginFunc(result.data.accessToken);
 
             toggleLoading(false);
 

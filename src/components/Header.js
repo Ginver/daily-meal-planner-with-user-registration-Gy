@@ -9,13 +9,13 @@ function Header() {
             <div>
                 <button
                     type="button"
-                    onClick={() => history.push('/signin')}
+                    onClick={() => history.push('/SignIn')}
                 >
                     Log in
                 </button>
                 <button
                     type="button"
-                    onClick={() => history.push('/signup')}
+                    onClick={() => history.push('/SignUp')}
                 >
                     Registreren
                 </button>
