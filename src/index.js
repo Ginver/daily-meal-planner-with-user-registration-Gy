@@ -1,15 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import UserContext from "./context/UserContext";
+import UserContextProvider from './context/UserContext';
 
 ReactDOM.render(
   <React.StrictMode>
-      <UserContext.Provider>
-    <App />
-      </UserContext.Provider>
+      <Router>
+          {/* eslint-disable-next-line react/jsx-no-undef */}
+            <UserContextProvider>
+                <App />
+            </UserContextProvider>
+      </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );
