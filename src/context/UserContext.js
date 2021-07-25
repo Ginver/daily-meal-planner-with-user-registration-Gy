@@ -47,55 +47,23 @@ function UserContextProvider({ children }) {
     //     const userId = decoded.sub;
     // }
 
-    // wanneer de applicatie geladen wordt willen we checken of er een token is, en als die er is maar er is geen gebruiker,
-    // dan willen we alsnog de gebruikersdata ophalen
-
-    useEffect(() => {
-            // checken of er een token is in de local storage?
-    //     const token = localStorage.getItem('token');
-            // checken of er geen user aanwezig is in de context
-    //     if ( token !== undefined && userAuth.user === null) {
-            // haal dan gebruikersdata op
-            // console.log('Er is een token!')
-    //         const decoded = jwt_decode(token)
-    //         const userId = decoded.sub;
-    //
-    //         fetchUserData();
-    //
-    //     } else {
-            // haal dan data op (zoals bij de login)
-            // zo nee, dan geen user, maar wel status op 'done':
-            setUserAuth({
-                user: null,
-                status: 'done',
-            });
-
-        // }
-    }, []);
-
-    // login functie aanmaken
-       async function loginFunction(jwtToken) {
-        console.log(jwtToken)
+    async function fetchUserData(jwtToken) {
         // we hebben hier de JWT token nodig om daaruit de userID te halen
         // hier gebruiken we de package jwt-decode voor (npm install jwt-decode --save)
-        const decoded = jwt_decode(jwtToken)
+        const decoded = jwt_decode(jwtToken);
         const userId = decoded.sub; // we willen de gebruikersdata ophalen
         console.log('DECODED JWT', decoded);
 
-        // JWT token in de local storage te zetten
-        localStorage.setItem('token', jwtToken);
-
         // gebruikersdata ophalen
-        // axios, async.get, try/catch, request
         try {
             // console.log('hallllloooo!')
             const result = await axios.get(`http://localhost:3000/600/users/${userId}`, {
                 headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${jwtToken}`,
-            }
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${jwtToken}`,
+                }
             });
-            console.log(result);
+            // console.log(result);
 
             // die data gebruike om de context te vullen
             setUserAuth({
@@ -107,22 +75,93 @@ function UserContextProvider({ children }) {
                 },
                 status: 'done',
             });
-
-            // doorlinken naar de profiel pagina
-            history.push('/Profile');
-
-        }catch(e) {
+        } catch(e) {
             console.error(e);
         }
+    };
 
-        // console.log("Login")
+    // wanneer de applicatie geladen wordt willen we checken of er een token is, en als die er is maar er is geen gebruiker,
+    // dan willen we alsnog de gebruikersdata ophalen
+    useEffect(() => {
+            // checken of er een token is in de local storage?
+        const token = localStorage.getItem('token'); // naam van de key moet hier meegegeven worden
+            // checken of er geen user aanwezig is in de context?
+        if ( token !== undefined && userAuth.user === null) {
+            // haal dan gebruikersdata op
+            // console.log('Er is een token!')
+
+            const decoded = jwt_decode(token)
+            const userId = decoded.sub;
+
+            fetchUserData(token);
+
+        } else {
+    //         // haal dan data op (zoals bij de login)
+    //         // zo nee, dan geen user, maar wel status op 'done':
+            setUserAuth({
+                user: null,
+                status: 'done',
+            });
+        }
+    }, []);
+
+    // login functie aanmaken
+       async function loginFunction(jwtToken) {
+        // console.log(jwtToken)
+        // // we hebben hier de JWT token nodig om daaruit de userID te halen
+        // // hier gebruiken we de package jwt-decode voor (npm install jwt-decode --save)
+        // const decoded = jwt_decode(jwtToken)
+        // const userId = decoded.sub; // we willen de gebruikersdata ophalen
+        // console.log('DECODED JWT', decoded);
+
+        // JWT token in de local storage te zetten
+        localStorage.setItem('token', jwtToken);
+
+        fetchUserData(jwtToken);
+        history.push('./Profile');
+
+        // gebruikersdata ophalen
+        // axios, async.get, try/catch, request
+    //     try {
+    //         // console.log('hallllloooo!')
+    //         const result = await axios.get(`http://localhost:3000/600/users/${userId}`, {
+    //             headers: {
+    //             "Content-Type": "application/json",
+    //             Authorization: `Bearer ${jwtToken}`,
+    //         }
+    //         });
+    //         console.log(result);
+    //
+    //         // die data gebruike om de context te vullen
+    //         setUserAuth({
+    //             user: {
+    //                 username: result.data.username,
+    //                 email: result.data.email,
+    //                 id: result.data.id,
+    //                 country: result.data.country,
+    //             },
+    //             status: 'done',
+    //         });
+    //
+    //         // doorlinken naar de profiel pagina
+    //         history.push('/Profile');
+    //
+    //     }catch(e) {
+    //         console.error(e);
+    //     }
+    //
+    //     // console.log("Login")
     }
     // logout functie aanmaken
-    function logoutFunction() {
+    function logoutFunction(jwtToken) {
         // console.log("Logout")
         // leeghalen van de localstorage (met localstorage.clear())
-
+        localStorage.clear('token', jwtToken);
         // user in de context weer op 'null' zetten
+        setUserAuth({
+            user: null,
+
+        });
     }
 
     // omdat userAuth een object is en we nog steeds gebruik willen maken van die automatische state updates zullen we de userAuth data 'spread'-en
